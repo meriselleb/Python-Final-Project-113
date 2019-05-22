@@ -53,6 +53,17 @@ for i in range (0, n):
 
     
 # PROBABILITY CALCULATIONS
+probabilities = [0] * n
+total_characters = int(len(text_string))
+for i in range (0, n):
+    if (sorted_count[i]) == 0:
+        continue
+    probabilities[i] = int(sorted_count[i])/ total_characters
+   
+
+print(probabilities)                                                     # print probabilities to check that they're correctly calculated                                   
+
+
 
 
 
