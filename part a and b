@@ -28,8 +28,14 @@ sorted_count.sort(reverse = True)
 
 
 # user input
-n = int(input('Select the number of letters to be considered in pie chart (n): '))
-# error handling here
+i = 55
+while i > 54 or i < 0:
+    n = int(input('Please number of letters to be considered in pie chart [ must be less than 54 and greater than 0]: '))
+    # error handling here
+    i = n
+
+
+# ensuring only letters that exist in the file are able to be chosen for pie chart
 ascii_characters = ""
 for i in range (0, n):
     if (sorted_count[i]) == 0:                                              # if n is greater than the amount of unique characters, only include unique characters
