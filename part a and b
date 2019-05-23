@@ -59,7 +59,6 @@ def get_letters_and_probability():
     for i in range (0, n):
         if (sorted_count[i]) == 0:                                              # if n is greater than the amount of unique characters, only include unique characters
             continue
-        print(sorted_count[i])
         
     # PROBABILITY CALCULATIONS
     probabilities = [0] * n
