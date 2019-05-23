@@ -2,37 +2,56 @@
 # Meriselle Ruotolo
 # Chrystal Mingo
 
-
-import tkinter
 import math
+from tkinter import *
+import tkinter.messagebox
 import turtle
+
+N_DISPLAYABLE_CHAR = 54
+
+# turn all into a single program
 
 # opens word.txt
 file = open("Words.txt", "r")
 
 # string filled with all from textfile
-text_string = (file.read())
+text_string = file.read()
 
 # letter_count initialized at zero
-letter_count = [0] * 93
+letter_count = [0] * N_DISPLAYABLE_CHAR
 
 # counting the letters                                                  
-for i in range(len(text_string)):   
-    ascii_number = ord(text_string[i]) - 32                                 # right now, our letter_count string is not in order
-    letter_count[ascii_number] = letter_count[ascii_number] + 1             # and it still correlates with the characters from text
+for i in range(len(text_string)):
+    if text_string[i] == '\n' or text_string[i] == ' ' or text_string[i] == '\t':
+        letter_count[53] += 1
+    elif ord(text_string[i]) >= 65 and ord(text_string[i]) <= 90:
+        letter_count[int(ord(text_string[i]) - 65)] += 1
+    elif ord(text_string[i]) >= 97 and ord(text_string[i]) <= 122:
+        letter_count[int(ord(text_string[i]) - 97 + 26)] += 1
+    else:
+        letter_count[52] +=1
 
+letter_count_pairs = []
+
+for i in range(N_DISPLAYABLE_CHAR):
+    if i == 52:
+        letter_count_pairs.append((letter_count[i], '#'))
+    elif i >= 0 and i < 26:
+        letter_count_pairs.append((letter_count[i], chr(i + 65))
+    elif i >= 26 and i < 52:
+        letter_count_pairs.append((letter_count[i], chr(i + 97 - 26))
+    else:   
+        letter_count_pairs.append((letter_count[i], ' '))
 
 # sorting from greatest to least
-sorted_count = letter_count.copy()
-sorted_count.sort(reverse = True)
+sorted_count = sorted(letter_count_pairs, reverse=True)
 
 
 # user input
-i = 55
-while i > 54 or i < 0:
+n = 55
+while n > 54 or n < 0:
     n = int(input('Please number of letters to be considered in pie chart [ must be less than 54 and greater than 0]: '))
     # error handling here
-    i = n
 
 
 # ensuring only letters that exist in the file are able to be chosen for pie chart
@@ -41,16 +60,6 @@ for i in range (0, n):
     if (sorted_count[i]) == 0:                                              # if n is greater than the amount of unique characters, only include unique characters
         continue
     print(sorted_count[i])
-
-# converting the n amount of characters back to its ascii symbols
-# for i in range(len(letter_count)):
-#    for j in range (0, n):
-#        if letter_count[j] == sorted_letters[i]
-#        ascii_character = chr(letter_count[j] + 32)
-#        print(ascii_character)
-
-
-
     
 # PROBABILITY CALCULATIONS
 probabilities = [0] * n
@@ -58,10 +67,11 @@ total_characters = int(len(text_string))
 for i in range (0, n):
     if (sorted_count[i]) == 0:
         continue
-    probabilities[i] = int(sorted_count[i])/ total_characters
+    probabilities[i] = int(sorted_count[i][0]) / total_characters
    
 
-print(probabilities)                                                     # print probabilities to check that they're correctly calculated                                   
+print(probabilities)                                                     # print probabilities to check that they're correctly calculated  
+
 
 
 
