@@ -7,7 +7,7 @@ from tkinter import *
 import tkinter.messagebox
 import turtle
 
-def get_letters_and_probability():
+def get_letters_and_probability(n):
     N_DISPLAYABLE_CHAR = 54
 
     # turn all into a single program
@@ -47,33 +47,31 @@ def get_letters_and_probability():
     # sorting from greatest to least
     sorted_count = sorted(letter_count_pairs, reverse=True)
 
-
-    # user input
-    n = 55
-    while n > 54 or n < 0:
-        n = int(input('Please number of letters to be considered in pie chart [ must be less than 54 and greater than 0]: '))
-        # error handling here
-
-
-    # ensuring only letters that exist in the file are able to be chosen for pie chart
+    # ensuring only letters that exist in the file are able to be chosen for pie chart\
+    filtered_counts = []
     for i in range (0, n):
         if (sorted_count[i]) == 0:                                              # if n is greater than the amount of unique characters, only include unique characters
             continue
+        filtered_counts.append(sorted_count[i])
         
     # PROBABILITY CALCULATIONS
     probabilities = [0] * n
     total_characters = int(len(text_string))
     for i in range (0, n):
-        if (sorted_count[i]) == 0:
+        if (filtered_counts[i]) == 0:
             continue
-        probabilities[i] = int(sorted_count[i][0]) / total_characters
+        probabilities[i] = (int(filtered_counts[i][0]) / total_characters, filtered_counts[i][1])
+
+
+    return probabilities
+
+# user input
+n = 55
+while n > 54 or n < 0:
+    n = int(input('Please number of letters to be considered in pie chart [ must be less than 54 and greater than 0]: '))
+
     
-get_letters_and_probability()
-
-
-
-
-
+print(get_letters_and_probability(n))
 
 
 
