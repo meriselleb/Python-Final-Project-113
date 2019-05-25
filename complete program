@@ -36,7 +36,7 @@ def get_letters_and_probability(n):
 
     for i in range(N_DISPLAYABLE_CHAR):
         if i == 52:
-            letter_count_pairs.append((letter_count[i], '#'))
+            letter_count_pairs.append((letter_count[i], 'special characters'))
         elif i >= 0 and i < 26:
             letter_count_pairs.append((letter_count[i], chr(i + 65)))
         elif i >= 26 and i < 52:
@@ -55,29 +55,30 @@ def get_letters_and_probability(n):
         filtered_counts.append(sorted_count[i])
         
     # PROBABILITY CALCULATIONS
-    probabilities = [0] * n
+    probabilities = []
     total_characters = int(len(text_string))
-    for i in range (0, n):
-        if (filtered_counts[i]) == 0:
+    for i in range (n):
+        if filtered_counts[i][0] == 0:
             continue
-        probabilities[i] = (int(filtered_counts[i][0]) / total_characters, filtered_counts[i][1] )
-        
+        probabilities.append((filtered_counts[i][0] / total_characters, filtered_counts[i][1] ))
+
     sum_of_all = 0
     for i in range (len(probabilities)):
-        part = float(probabilities[i][0])
-        sum_of_all += float(part)
+        sum_of_all += probabilities[i][0]
 
     all_other_probability = 1 - sum_of_all
 
-    return probabilities, sum_of_all, all_other_probability, total
+    if all_other_probability > 0:
+        probabilities.append((all_other_probability, "others"))
+
+    return probabilities
 
 #Chrystal Pie Chart
-
-
 def pie_Chart():
     if int(ninput.get()) > 54 or int(ninput.get()) < 0:
         tkinter.messagebox.showinfo("ERROR", "Invalid input. Please enter a non-negative integer less than 54.")
-        return 1;   
+        return 1
+
     import turtle
     from turtle import Turtle, Screen
     import itertools
@@ -85,105 +86,59 @@ def pie_Chart():
 
     n = int(ninput.get())
 
-    probabilities =[] * 54
-    probabilties, sum_of_all,all_other_probabilities, sumall = get_letters_and_probability(n)
-
-    sum_of_all_probabilities = sum_of_all
-    probability_of_others = all_other_probabilities
-    total = sumall
+    probabilities = get_letters_and_probability(n)
     
-    #turtle.clearscreen()
+    turtle.clearscreen()
 
     # pie chart specifications
     radius = 140
-    radius_of_label = radius * 1.70
-    slice_sum = total - sum_of_all_probabilities
+    radius_of_label = radius * 1.50
     turtle.setup(750, 750)
     chart = Turtle()
     chart.penup()
     chart.sety(-radius)
     chart.pendown()
     
-
-
     # pie chart customizations
     fontSize = 12
-    Font = ("Ariel", fontSize, "bold")
-    colors = cycle(['hot pink', 'tomatoe', 'dark orchid' , 'thistle', 'medium orchid', 'lawn green', \
+    Font = ("Ariel", fontSize)
+    colors = cycle(['crimson', 'dark orange', 'dark orchid' , 'Medium Slate Blue', 'thistle', 'Misty Rose', \
                     'aquamarine', 'cyan', 'sky blue', 'gray', 'purple', 'lavender', \
                     'magenta', 'seashell', 'brown', 'dark olive green', 'spring green', 'navy', 'tan', \
-                    'steel blue', 'green yellow', 'dark orange', 'firebrick', 'maroon', 'light cyan', \
-                    'sandy brown', 'dark green',  'light coral', 'pink', 'pale violet red', \
-                    'yellow', 'blue', 'green', 'red', 'orange', 'crimson', 'lime', \
-                    'Dark Slate Gray' , 'Medium Slate Blue', 'Linen', 'Honeydew', \
-                    'Misty Rose', 'Dodger Blue', 'Gold', 'royal blue' , 'dark red', \
-                    'cornflower blue', 'Beige', 'Wheat' , 'Khaki', 'Saddle brown', 'peru', 'thistle', 'olive drab'])
+                    'steel blue', 'green yellow', 'firebrick', 'maroon', 'light cyan', \
+                    'sandy brown', 'dark green', 'light coral', 'pink', 'pale violet red', \
+                    'yellow', 'blue', 'green', 'red', 'orange','hot pink', 'lime', \
+                    'Dark Slate Gray' , 'Linen','medium orchid', 'Honeydew', \
+                    'lawn green', 'Dodger Blue', 'Gold', 'royal blue' , 'dark red', \
+                    'cornflower blue', 'Beige', 'Wheat' , 'Khaki', 'Saddle brown', 'tomato', 'peru', 'thistle', 'olive drab'])
 
-    # n cases
-    # if n is zero, then the normal procedure doesn't work
-    if n == 0:
-        sum_writing = format(slice_sum, '.4f')
-        sum_of_all_other_letters_label = "All other letters = " + sum_writing
+    count = 0
+    for probability, letter in probabilities:
+        print(probability)
+        count += 1
         chart.fillcolor(next(colors))
         chart.begin_fill()
-        chart.circle(radius)
+        chart.circle(radius, probability * 360)
         position = chart.position()
-        chart.goto(0, 0) #origin
+        if n > 0:
+            chart.goto(0, 0) #origin
         chart.end_fill()
         chart.setpos(position)
-        chart.penup()                       #is this needed?
-        chart.sety(-radius_of_label)
-        chart.circle(radius_of_label, slice_sum * 360)
-        chart.write(sum_of_all_other_letters_label, align = "center", font = Font)
-        chart.hideturtle()
-        screen = Screen()
-        screen.exitonclick()
-    else: 
-        count = -1
-        for probability, letter in probabilities[:n]:
-            print(probability)
-            count += 1
-            chart.fillcolor(next(colors))
-            chart.begin_fill()
-            chart.circle(radius, probability * 360)
-            position = chart.position()
-            chart.goto(0, 0) #origin
-            chart.end_fill()
-            chart.setpos(position)
-            if count == n - 1:
-                chart.fillcolor(next(colors))
-                chart.begin_fill()
-                chart.circle(radius, slice_sum * 360)
-                position = chart.position()
-                chart.goto(0, 0)
-                chart.end_fill()
-                chart.setpos(position)
-        chart.penup()
-        chart.sety(-radius_of_label)
+    chart.penup()
+    chart.sety(-radius_of_label)
 
-        second_count = -1
-        for label, i in probabilities[:n]:
-            second_count += 1
-            sum_writing = format(slice_sum, '.4f')
-            format_label = format(label, '.4f')
-            label_of_part = " = " + format_label
-            chart.circle(radius_of_label, label * 360 / 2)
-            chart.write(i + label_of_part, align = "center", font = Font)
-            chart.circle(radius_of_label, label * 360/ 2)
-            if second_count == n - 1:
-                sum_of_all_other_letters_label = "All other letters = " + sum_writing
-                chart.circle(radius_of_label, slice_sum * 360 / 2)
-                chart.write(sum_of_all_other_letters_label, align = "center", font = Font)
-                chart.circle(radius_of_label, slice_sum * 360  / 2)
-        chart.hideturtle()
+    second_count = -1
+    for label, i in probabilities:
+        second_count += 1
+        format_label = format(label, '.4f')
+        label_of_part = " = " + format_label
+        chart.circle(radius_of_label, label * 360 / 2)
+        chart.write(i + label_of_part, align="center", font=Font)
+        chart.circle(radius_of_label, label * 360/ 2)
 
-        screen = Screen()
-        screen.exitonclick()
-
-
-# testing
-
-
+    chart.hideturtle()
+    screen = Screen()
+    screen.exitonclick()
 
 #Creating the interface 
 # rewrite later
@@ -194,17 +149,15 @@ interface.geometry("470x125")
 Title = Label(interface, text = "Final Project", font=("bold", 15))
 Title.grid(row=0, columnspan=90)
 
-Descript = Label(interface, text = "This program will draw a pie chart of the n most frequent letters in your file 'Words.txt'.\n")
-Descript.grid(row =1, columnspan=90)
-
-inplabel = Label(interface, text = "n = ")
-inplabel.grid(row = 2, sticky = E)
-
 ninput = Entry(interface)
 ninput.grid(row = 2, column= 1)
-
-nrestrict = Label(interface, text = "(Integer n must satisfy this condition 0 ≤  n < 27)")
+inplabel = Label(interface, text = "n = ")
+inplabel.grid(row = 2, sticky = E)
+nrestrict = Label(interface, text = "(Integer n must satisfy this condition 0 ≤  n < 54)")
 nrestrict.grid(row = 2, column = 3, sticky = W)
+
+Descript = Label(interface, text = "This program will draw a pie chart of the n most frequent letters in your file 'Words.txt'.\n")
+Descript.grid(row =1, columnspan=90)
 
 create = Button(interface, text='Create', command= pie_Chart)
 create.grid(row = 2, column= 2, sticky = E)
@@ -215,3 +168,4 @@ exitbutton.grid(row = 3, column = 1, sticky = W)
 
 #End of interface
 interface.mainloop()
+
