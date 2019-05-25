@@ -91,7 +91,8 @@ def pie_Chart():
     sum_of_all_probabilities = sum_of_all
     probability_of_others = all_other_probabilities
     total = sumall
-    turtle.clearscreen()
+    
+    #turtle.clearscreen()
 
     # pie chart specifications
     radius = 140
@@ -132,7 +133,7 @@ def pie_Chart():
         chart.setpos(position)
         chart.penup()                       #is this needed?
         chart.sety(-radius_of_label)
-        chart.circle(radius_of_label, slice_sum * 360 / total)
+        chart.circle(radius_of_label, slice_sum * 360)
         chart.write(sum_of_all_other_letters_label, align = "center", font = Font)
         chart.hideturtle()
         screen = Screen()
@@ -140,10 +141,11 @@ def pie_Chart():
     else: 
         count = -1
         for probability, letter in probabilities[:n]:
+            print(probability)
             count += 1
             chart.fillcolor(next(colors))
             chart.begin_fill()
-            chart.circle(radius, probability * 360 / total)
+            chart.circle(radius, probability * 360)
             position = chart.position()
             chart.goto(0, 0) #origin
             chart.end_fill()
@@ -151,7 +153,7 @@ def pie_Chart():
             if count == n - 1:
                 chart.fillcolor(next(colors))
                 chart.begin_fill()
-                chart.circle(radius, slice_sum * 360 / total)
+                chart.circle(radius, slice_sum * 360)
                 position = chart.position()
                 chart.goto(0, 0)
                 chart.end_fill()
@@ -165,14 +167,14 @@ def pie_Chart():
             sum_writing = format(slice_sum, '.4f')
             format_label = format(label, '.4f')
             label_of_part = " = " + format_label
-            chart.circle(radius_of_label, label * 360 / total / 2)
+            chart.circle(radius_of_label, label * 360 / 2)
             chart.write(i + label_of_part, align = "center", font = Font)
-            chart.circle(radius_of_label, label * 360/ total / 2)
+            chart.circle(radius_of_label, label * 360/ 2)
             if second_count == n - 1:
                 sum_of_all_other_letters_label = "All other letters = " + sum_writing
-                chart.circle(radius_of_label, slice_sum * 360 / total / 2)
+                chart.circle(radius_of_label, slice_sum * 360 / 2)
                 chart.write(sum_of_all_other_letters_label, align = "center", font = Font)
-                chart.circle(radius_of_label, slice_sum * 360 / total / 2)
+                chart.circle(radius_of_label, slice_sum * 360  / 2)
         chart.hideturtle()
 
         screen = Screen()
@@ -180,7 +182,7 @@ def pie_Chart():
 
 
 # testing
-# print(get_letters_and_probability(n))
+
 
 
 #Creating the interface 
