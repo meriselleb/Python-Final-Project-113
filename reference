@@ -1,0 +1,167 @@
+
+#Importing everything from tkinter
+from tkinter import *
+import tkinter.messagebox
+
+
+Part B (partB is the module/function to compute the frequencies of each letter from 'Words.txt')
+def readB():
+    char_list = list()
+    my_file = open("Words.txt", "r")
+    letters = "abcdefghijklmnopqrstuvwxyz"
+    while(True):
+        a_char = str(my_file.readline())
+        if a_char == '':
+            break
+
+        for character in a_char:
+            if character != '\n' and character != ' ':
+                for i in range(26):
+                    if character.lower() == letters[i]:
+                        char_list.append(character)
+    my_file.close()
+    size = len(char_list)
+    Probability = [0]*26
+    newList = [0]*26
+    for i in range(26):
+        for j in range(size):
+            if char_list[j].lower() == letters[i]: #Make sure to include a .lower() method in order to keep words that have a capital to be read
+                Probability[i] = Probability[i] + 1
+    for a in range(26):
+        Probability[a] = float(Probability[a] / size)
+    for i in range(26):
+        newList[i] = Probability[i]
+
+    return newList
+
+
+
+ Part C (Creating piechart)
+def pieCircle():
+    if int(ninput.get()) > 26 or int(ninput.get()) < 0:
+        tkinter.messagebox.showinfo("ERROR", "You have entered an invalid input. Please enter a \
+        non-negative number that is less than 27.")
+        return 1;
+    import turtle
+    from turtle import Turtle, Screen
+    import itertools
+    from itertools import cycle
+
+    turtle.clearscreen()
+    newList = readB()
+    newLetters = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'] #remember to add a special one to the new list for the ' or / or etc
+    listofList = [0]*26
+
+    colors = cycle(['yellow', 'blue', 'green', 'red', 'orange', 'crimson', 'lime', \
+                    'gray', 'purple', 'aquamarine', 'cyan', 'sky blue', 'lavender', \
+                    'Dark Slate Gray' , 'Medium Slate Blue', 'Linen', 'Honeydew', \
+                    'Misty Rose', 'Dodger Blue', 'Gold', \
+                    'Indian Red', 'Beige', 'Wheat' , 'Khaki', 'Saddle brown', 'peru'])
+
+    n = int(ninput.get())
+    for x in range(26):
+        listofList[x] = newList[x], newLetters[x]
+    listofList.sort(reverse=True)
+    for y in range(26):
+        print(listofList[y])
+    radius = 140
+    label_rad = radius * 1.70
+    fontSize = 12
+    Font = ("Ariel", fontSize, "bold")
+    total = sum(_ for _, letter in listofList)
+    turtle.setup(750, 750)
+    circle = Turtle()
+    circle.penup()
+    circle.sety(-radius)
+    circle.pendown()
+    count = -1
+    partialsum = total - sum(num for num,letter in listofList[:n])
+    if n == 0:
+        circle.fillcolor(next(colors))
+        circle.begin_fill()
+        circle.circle(radius)
+        position = circle.position()
+        circle.goto(0, 0)
+        circle.end_fill()
+        circle.setpos(position)
+        circle.penup()
+        circle.sety(-label_rad)
+        sub1 = format(partialsum, '.4f')
+        sub2 = "All other letters = " + sub1
+        circle.circle(label_rad, partialsum * 360 / total)
+        circle.write(sub2, align="center", font=Font)
+        circle.hideturtle()
+        screen = Screen()
+        screen.exitonclick()
+    else:
+        count = -1
+        for z, letter in listofList[:n]:
+            count += 1
+            circle.fillcolor(next(colors))
+            circle.begin_fill()
+            circle.circle(radius, z*360 /total)
+            position = circle.position()
+            circle.goto(0,0)
+            circle.end_fill()
+            circle.setpos(position)
+            if count == n - 1:
+                circle.fillcolor(next(colors))
+                circle.begin_fill()
+                circle.circle(radius, partialsum * 360 / total)
+                position = circle.position()
+                circle.goto(0, 0)
+                circle.end_fill()
+                circle.setpos(position)
+        circle.penup()
+        circle.sety(-label_rad)
+
+        count2 = -1
+        for label, z in listofList[:n]:
+            count2 += 1
+            sub = format(label, '.4f')
+            newsub = " = "+ sub
+            circle.circle(label_rad, label * 360 / total/2)
+            circle.write(z+newsub, align="center", font=Font)
+            circle.circle(label_rad, label * 360 / total/2)
+            if count2 == n - 1:
+                sub1 =format(partialsum, '.4f')
+                sub2 = "All other letters = " + sub1
+                circle.circle(label_rad, partialsum * 360 / total/2)
+                circle.write(sub2, align="center", font=Font)
+                circle.circle(label_rad, partialsum * 360 / total / 2)
+        circle.hideturtle()
+
+        screen = Screen()
+        screen.exitonclick()
+
+
+
+#Creating the interface
+interface = Tk()
+interface.geometry("470x125")
+interface.title("Final Project - Interface")
+
+Title = Label(interface, text = "Final Project", font=("bold", 15))
+Title.grid(row=0, columnspan=90)
+
+Descript = Label(interface, text = "This program will draw a pie chart of the n most frequent letters in your file 'Words.txt'.\n")
+Descript.grid(row =1, columnspan=90)
+
+inplabel = Label(interface, text = "n = ")
+inplabel.grid(row = 2, sticky = E)
+
+ninput = Entry(interface)
+ninput.grid(row = 2, column= 1)
+
+nrestrict = Label(interface, text = "(Integer n must satisfy this condition 0 ≤  n < 27)")
+nrestrict.grid(row = 2, column = 3, sticky = W)
+
+create = Button(interface, text='Create', command= pieCircle)
+create.grid(row = 2, column= 2, sticky = E)
+
+exitbutton = Button(interface, text='Quit', command=interface.quit)
+exitbutton.grid(row = 3, column = 1, sticky = W)
+
+
+#End of interface
+interface.mainloop()
